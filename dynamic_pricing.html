@@ -37,8 +37,6 @@
 									<h2>Objective</h2>
 									<p>The goal of the project was to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
 
-									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
-
 									<hr class="major" />
 
 									<h2>Challenges</h2>
@@ -49,6 +47,9 @@
 
 									<h2>Methodology</h2>
 									<p>Exploration of the data revealed detailed feature data over a number of years, allowing for a more complex model to be implemented. The main idea was to build a machine learning model to predict whether a customer will accept a quote, using the price (and other features) as inputs. We then insert a range of different prices into the model, and calculate the corresponding conversion probabilities. Since the goal is to maximise margin, we opted to choose the price that resulted in the highest expected margin, which is the margin we would make if the customer accepted the quote, multiplied by the probability of them accepting the quote.</p>
+
+									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
+									
 									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
 									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
 									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
