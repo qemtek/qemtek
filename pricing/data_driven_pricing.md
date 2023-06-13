@@ -2,7 +2,7 @@
 
 ## What is data driven pricing?
 
-Data driven pricing is about using data to determine the optimal price points for products and services. Companies using their data to do this correctly have a major advantage over companies that aren't, and we have personally overseen uplifts of 20% margin after deploying such strategies.
+Data driven pricing is about using data to determine the optimal price points for products and services. Companies using their data to do this correctly have a major advantage over companies that aren't, and I have personally overseen uplifts of 20% margin after deploying such strategies.
 
 ## What is the theory behind it?
 
