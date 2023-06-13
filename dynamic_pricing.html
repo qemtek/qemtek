@@ -56,6 +56,11 @@
 
 									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
 									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
+
+									<hr class="major" />
+
+									<h2>Testing / Validation / Maintainance</h2>
+
 									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
 									<p>Throughout live testing, a control group was set up which did not receive price modifications. This was continually compared with the test group on the KPIs defined above.</p>
 									<p>A retraining pipeline was set up for the model, which would continually retrain the model on new data each month in order to capture emerging trends and changing economic conditions.</p>
@@ -63,6 +68,7 @@
 									<hr class="major" />
 
 									<h2>Results</h2>
+									
 									<p>The final iteration of the model achieved a 20% uplift in overall margin for an 8% decrease in conversion probability.</p>
 								</section>
 
