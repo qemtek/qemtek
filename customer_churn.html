@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Dynamic Pricing</title>
+		<title>Customer Churn</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -26,52 +26,48 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Dynamic Pricing</h1>
+										<h1>Customer Churn</h1>
 									</header>
 
 									<hr class="major" />
 
 									<h2>Introduction</h2>
 
-									<p>Dynamic pricing is a form of data driven pricing, and is about using machine learning techniques to influence pricing strategy. In using machine learning models to learn trends relating to customer behaviour, seasonal patterns and product specific behaviours, we are able to estimate the probability of a customer purchasing a product at a particular price point. If we repeat this for a range of price points, we can build a picture of what prices a customer (or group of customers) is willing to accept for a product. Once we have estimated a customer's price range, we can use this to set prices based on the objective we hope to achieve. If we want to improve margin, we can position ourselves near the top of the price range. If we are more interested in conversions and market share, we can position ourselves lower in the price range.</p>
-									<p>This project involved introducing dynamic pricing to quotes for a moving company.</p>
+									<p>Churn modelling involves predicting when a customer has stopped purchasing a product/servivce. The actual definition of churn depends on the product and industry. If the service is a subscription, a customer churns when they cancel the service. If the product is something the customer buys on occasion, such as takeout, then churn could mean not making a purchase for a certain number of weeks. </p>
+									<p>Churn models help businesses identify the customers they are most likely to use, so that the business can invest appropriately to try and retain that customer.</p>
+									<p>This project involved building a customer churn model for a large delivery company, which operated in 12 different countries at the time. Given a set budget, the model would be able to identify which customers to spend money on in retention campaigns. Such models are often used in conjunction with customer lifetime value models, which estimate how much a customer is likely to spend over a set period and serves as a good measure of a customer's value to a business.</p>
 
 									<hr class="major" />
 
 									<h2>Objective</h2>
-									<p>The goal of the project was to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
+									<p>The goal of the project was to maximise retention (or conversely, minimise churn), per euro invested in promotional campaigns. The general idea is that targeting customers with a high probability of churning and offering them promotions will incentivise future purchases through habit building and helping the customer find more restaurants that they like.</p>
+									<p>If we offer promotions to customers who are unlikely to churn, these customers will use the promotional offers but probably would have made a purchase anyway, which results in a loss for the company. </p>
 
 									<hr class="major" />
 
 									<h2>Challenges</h2>
-									<p>Building a data driven pricing strategy is technically difficult because the right strategy may be unique for a particular product, business and industry. Additionally, each company may have different levels of data, which require different modelling techniques to achieve the best results.</p>
+									<p>Customer purchasing data is often very noisy. A customer may churn because they have started using a competitor, gone on holiday or simply decided to save money. Because of this, it can be difficult to validate churn models, especially if the company has a diverse customer base, low order volumes or a naturally low conversion rate. A/B testing is a common technique used to verify whether an improvement in retention is 'statistically significant', and in each of the cases defined in the previous sentence, a large sample size may be required which can take weeks to achieve. When running large tests for extended time periods, testing can become very expensive, so it is important that the test is planned properly and results are obtained on the first attempt.</p>
 									<p></p>
 
 									<hr class="major" />
 
 									<h2>Methodology</h2>
-									<p>Exploration of the data revealed detailed feature data over a number of years, allowing for a more complex model to be implemented. The main idea was to build a machine learning model to predict whether a customer will accept a quote, using the price (and other features) as inputs. We then insert a range of different prices into the model, and calculate the corresponding conversion probabilities. Since the goal is to maximise margin, we opted to choose the price that resulted in the highest expected margin, which is the margin we would make if the customer accepted the quote, multiplied by the probability of them accepting the quote.</p>
-
-									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
-
-									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
-									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
+									<p>The first step in such projects is usually always to explore the data and try to understand what factors are most important in regards to churn. In the food delivery space, increases in price, lack of options and competitors are often very important. High value customers usually have specific purchasing patterns, like ordering every sunday, so changes in their purchasing pattern are also key indicators of churn.</p>
+									<p>After identifying key features and building a dataset, a list of candidate models were identified based on the amount/quality of the data available. If the data is lacking in either of these factors, simpler models are preferred, as more complex models require an abundance of high quality data to correctly capture the patterns we are looking for. In this case, there was an abundance of high quality data, so we were able to experiment with some deep learning architectures alongside more traditional models such as XGBoost.</p>
+									<p>A review of recent literature on churn revealed that a convolutional neural network, feeding into a LSTM layer, provided improvements in performance when compared with traditional modelling techniques. While this gave a slight improvement over an XGBoost model in terms of correct churn predictions, the lack of explainability of such a model made it an unfavourable option, because we cannot employ tools such as SHAP, which tell us why a model made a prediction. Knowing why a model made a particular prediction is important in churn modelling because these 'themes' are something that we can track over time to improve business understanding around churn.</p>
+									<p>After deciding on XGBoost, and optimising model parameters, the model probabilities were compared against real examples to confirm that the churn probability output by the model is accurate. If the model says 20% likely to churn, we can find all other customers who were predicted 20%, and calculate at the churn rate of that group. If the churn rate is close to 20%, then we know that the model probabilites are representative of the real world. If this is not the case, we need to take additional steps to 'calibrate' the model. This is known as probability calibration.</p>
 
 									<hr class="major" />
 
-									<h2>Testing / Validation / Maintainance</h2>
-
-									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
-									<p>Throughout live testing, a control group was set up which did not receive price modifications. This was continually compared with the test group on the KPIs defined above.</p>
-									<p>A retraining pipeline was set up for the model, which would continually retrain the model on new data each month in order to capture emerging trends and changing economic conditions.</p>
+									<h2>Testing / Validation</h2>
+									<p>Testing the churn model involved designing an A/B test, in which a certain amount of budget was allocated to promotions (money off a customer's next order). In the control group, these promotions were given at random, and in the test group only customers with a high churn probability are selected.</p>
+									<p>Using the expected improvement in retention and current retention rates, we are able to calculate the sample size required to achieve statistical significance. Based on the numbers of customers we expect to go into the test each week, we can estimate the number of weeks that the test needs to run for, and the cost of running the test.</p>
 
 									<hr class="major" />
 
 									<h2>Results</h2>
-
-									<p>The final iteration of the model achieved a 20% uplift in overall margin for an 8% decrease in conversion probability.</p>
+									<p>Without any spend, the churn rate at the business as 41.3%. After spending €20K at random (control group), the churn rate decreased to 40.2%. After selecting customers with a high churn probability, the churn rate decreased further to 39.3%. This means we can get a 1.1% improvement in churn rate per €20K when selecting customers at random, which increases to 2% when using the churn model. This equates to (almost) a doubling in the effectiveness of the marketting budget.</p>
 								</section>
-
 						</div>
 					</div>
 
@@ -97,7 +93,7 @@
 										<li>
 											<span class="opener">Experience</span>
 											<ul>
-												<li><a href="#">Shift 2021-Present</a></li>
+												<li><a href="shift.html">Shift 2021-Present</a></li>
 												<li><a href="#">Nuclio 2021-Present</a></li>
 												<li><a href="#">FSB 2021</a></li>
 												<li><a href="#">Glovo 2019-2021</a></li>
