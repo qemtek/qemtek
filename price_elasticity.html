@@ -33,43 +33,20 @@
 
 									<h2>Introduction</h2>
 
-									<p>Dynamic pricing is a form of data driven pricing, and is about using machine learning techniques to influence pricing strategy. In using machine learning models to learn trends relating to customer behaviour, seasonal patterns and product specific behaviours, we are able to estimate the probability of a customer purchasing a product at a particular price point. If we repeat this for a range of price points, we can build a picture of what prices a customer (or group of customers) is willing to accept for a product. Once we have estimated a customer's price range, we can use this to set prices based on the objective we hope to achieve. If we want to improve margin, we can position ourselves near the top of the price range. If we are more interested in conversions and market share, we can position ourselves lower in the price range.</p>
-									<p>This project involved introducing dynamic pricing to quotes for a moving company.</p>
+									<p>In this project, the client was a retailer with a huge catalogue of products. There was a need to increase prices to improve margins, but after increasing prices on some products, the client experienced a huge drop in order volumes. In pricing terms, we would say that such products have a high price sensitivity (also referred to as elasticity).</p>
 
-									<hr class="major" />
+									<p>A product with high price sensitivity will experience large changes in order volumes, even for small perturbations in price. There can be many factors that contribute to this, including the product category, competitor pricing, demand for the product (which may change over time), supply (within the company and competitors), quality tier (whether the product is seem as cheap, mid range or high end) and more.</p>
 
-									<h2>Objective</h2>
-									<p>The goal of the project was to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
+									<p>Usually, many of these factors are at play at the same time, making it difficult to discern the importance of each factor to a products price elasticity. Thankfully, with enough data and machine learning expertise, it is often possible to determine which products are the most/least price elastic and why. The extent to which we can explain the 'why' depends on the amount of data available, and the quality.</p>
 
-									<hr class="major" />
+									<p>In this particular project, there were years of good quality data available on most products, but minimal price changes had taken place (promotional discounts being the main exception). There are a number if ways to deal with a lack of price changes. If there are similar products priced differently, we can look at the variation in order volumes between the products to get some idea. The best solution is to run a series of tests, where the prices on products are allowed to vary randomly within a predetermined range, over different time periods. Since this can be a very expensive test, the decision was made to do this in a small number of different products, and make the assumption that similar products have a similar price sensitivity.</p>
 
-									<h2>Challenges</h2>
-									<p>Building a data driven pricing strategy is technically difficult because the right strategy may be unique for a particular product, business and industry. Additionally, each company may have different levels of data, which require different modelling techniques to achieve the best results.</p>
-									<p></p>
+									<p>After doing this, price sensitivity scores could be determined for all products, and aggregated into product groups.</p>
 
-									<hr class="major" />
+									<p>Testing the accuracy of the scores involved estimating the change in volume for a given change in price, and then changing the price of the product and comparing the real order volume to the estimated order volume.</p>
 
-									<h2>Methodology</h2>
-									<p>Exploration of the data revealed detailed feature data over a number of years, allowing for a more complex model to be implemented. The main idea was to build a machine learning model to predict whether a customer will accept a quote, using the price (and other features) as inputs. We then insert a range of different prices into the model, and calculate the corresponding conversion probabilities. Since the goal is to maximise margin, we opted to choose the price that resulted in the highest expected margin, which is the margin we would make if the customer accepted the quote, multiplied by the probability of them accepting the quote.</p>
-
-									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
-
-									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
-									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
-
-									<hr class="major" />
-
-									<h2>Testing / Validation / Maintainance</h2>
-
-									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
-									<p>Throughout live testing, a control group was set up which did not receive price modifications. This was continually compared with the test group on the KPIs defined above.</p>
-									<p>A retraining pipeline was set up for the model, which would continually retrain the model on new data each month in order to capture emerging trends and changing economic conditions.</p>
-
-									<hr class="major" />
-
-									<h2>Results</h2>
-
-									<p>The final iteration of the model achieved a 20% uplift in overall margin for an 8% decrease in conversion probability.</p>
+									<p>The project allowed the client to improve margins by 5% on the products which had changed prices. Perhaps more importantly, the client was able to avoid price changes that damaged order volumes and market share.</p>
+									
 								</section>
 
 						</div>
