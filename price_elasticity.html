@@ -26,7 +26,7 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Dynamic Pricing</h1>
+										<h1>Price Elasticity Modelling</h1>
 									</header>
 
 									<hr class="major" />
@@ -34,6 +34,8 @@
 									<h2>Introduction</h2>
 
 									<p>In this project the client was a retailer with a huge catalogue of products. There was a need to increase prices to improve margins, but after increasing prices on some products, the client experienced a huge drop in order volumes. Concerned about this, the company was interested to know if they could use their data to avoid this situation happening again. </p>
+
+									<hr class="major" />
 
 									<h2>Objectives</h2>
 
@@ -43,6 +45,8 @@
 										<li><p><b>Total Margin (Corrected for seasonality)</b> - The aim of the project is to increase marign, so whilst trying to eliminate external factors such as seasonality, we can compare total margin in a period before the price change with a period of equal length after the price change has occurred. This will be particularly difficult to measure for any highly seasonal products if the price change is made during a change of season, so the ideal time to make a price change is different for each product.</p></li>
 									</ul>
 
+									<hr class="major" />
+
 									<h2>Theory</h2>
 
 									<p>In pricing terms, we would say that such products have a high price elasticity (also referred to as price sensitivity). Price elasticity is defined as the change in order volumes for a given change in price. The score itself tells you how much volume is expected to change (measured in percentages) for a 1% increase in price. Traditionally, one score is calculated per product, but with advancements in machine learning it is also possible to estimate this on a case-by-case basis. For more information on this, you can check out my section on Dynamic Pricing in the Projects section of the website.</p>
@@ -50,6 +54,8 @@
 									<p>A product with high price elasticity will experience large changes in order volumes, even for small perturbations in price. There can be many factors that contribute to this, including the product category, competitor pricing, demand for the product (which may change over time), supply (within the company and competitors), quality tier (whether the product is seem as cheap, mid range or high end) and more.</p>
 
 									<p>Usually, many of these factors are at play at the same time, making it difficult to discern the importance of each factor to a price elasticity. Thankfully, with enough data and machine learning expertise, it is often possible to determine which products are the most/least price elastic and why. The extent to which we can explain the 'why' depends on the amount of data available, and the quality.</p>
+
+									<hr class="major" />
 
 									<h2>Methodology</h2>
 
@@ -61,11 +67,17 @@
 
 									<p>The compromise we decided to go for was to do run pricing tests for a small number of products in different categories, and make the assumption that similar products have a similar price elasticity. For example, if the company sold a range of drilling tools, we would test one tool and use the determined price elasticity score for all other drilling tools. After doing this, price elasticity scores could be determined for all products, and aggregated by product category.</p>
 
+									<hr class="major" />
+
 									<h2>Testing/Validation</h2>
 
 									<p>Testing the accuracy of the scores involved estimating the change in volume for a given change in price, and then changing the price of the product and comparing the real order volume to the estimated order volume. The main objective</p>
 
 									<p>Testing the accuracy of the scores involved estimating the change in volume for a given change in price, and then changing the price of the product and comparing the real order volume to the estimated order volume.</p>
+
+									<hr class="major" />
+
+									<h2>Results</h2>
 
 									<p>The project allowed the client to improve margins by an average of 5% (corrected for seasonality) on the products which had changed prices. Perhaps more importantly, the client was able to avoid price changes that damaged order volumes and market share.</p>
 
