@@ -33,13 +33,29 @@
 
 									<h2>Introduction</h2>
 
-									<p>Dynamic pricing is a form of data driven pricing, and is about using machine learning techniques to influence pricing strategy. In using machine learning models to learn trends relating to customer behaviour, seasonal patterns and product specific behaviours, we are able to estimate the probability of a customer purchasing a product at a particular price point. If we repeat this for a range of price points, we can build a picture of what prices a customer (or group of customers) is willing to accept for a product. Once we have estimated a customer's price range, we can use this to set prices based on the objective we hope to achieve. If we want to improve margin, we can position ourselves near the top of the price range. If we are more interested in conversions and market share, we can position ourselves lower in the price range.</p>
+									<p>In this project, the client was a logistics company who were struggling to grow in the highly competitive home-move market. Prices were generated through an equation taking into account distance, item volumes, required van size and more. The price was the same for every customer and region.</p><
+
+									<p>Dynamic pricing is a form of data driven pricing which often utilises machine learning techniques to influence pricing strategy. Machine learning models are able to learn complex patterns between key conversion indicators (customer behaviour, demographics, seasonality, and more) and their relationship to conversion (which in this case, is defined as a customer purchsing a product).</p>
+
+									<p>After learning these relationships we are able to estimate the probability of a customer purchasing a product at  different price points. In doing this, we can build a picture of what prices a customer (or group of customers) is likely to accept for a product, and the probability of acceptance.</p>
+
+									<p>If trained correctly, these models are extremely powerful and can be used to achieve whatever pricing objective a business hopes to achieve. We can identify the price point that returns the highest margin if the goal is income related. If we hope to improve market share, we can also choose to optimise for conversion, whilst maintaining a healthy bottom line. Data driven pricing can give businesses the power to set prices objectively, and has repeatedly returned successful results in the projects I have worked on.</p>
+
+
 									<p>This project involved introducing dynamic pricing to quotes for a moving company.</p>
 
 									<hr class="major" />
 
+									<h2>Theory</h2>
+
+									<p>Whilst the industry and types of product are different between this project and the price elasticity project (also included in the Work Projects section), this project can be seen of an extension of the theory used there. In that project, 'price elasticity' scores were generated for different products. Only 1 score was generated per product, which was a simplification. Whilst this is effective for small variations in price, in reality the price elasticity of a product will be different at different price points. Being able to estimate price elasticity at different price points requires much more data and a powerful machine learning model. Thankfully, in the home-move industry, prices can vary significantly based on the distance, number of items and driver rates, making it an ideal project for machine-learning-driven pricing.</p>
+
+									<p>Rather than looking at how changes in price affect order volumes (which was the case in the previous project), every 'product' in this project is unique to the customer. As such, a different approach is needed. For every enquiry, a quote with a price is generated and shown to the customer, and the customer either accepts or declines the quote. Whether the customer accepts/declines the quote is an ideal target for a machine learning model. If we use the price as one of the features in the model, we can supply different prices to the model, and measure the corresponding change in conversion probability. In doing this, we are able to simulate the price elasticity of each customer. </p>
+
+									<hr class="major" />
+
 									<h2>Objective</h2>
-									<p>The goal of the project was to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
+									<p>The goal of the project was to utilize the clients data to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
 
 									<hr class="major" />
 
@@ -98,7 +114,7 @@
 											<span class="opener">Experience</span>
 											<ul>
 												<li><a href="shift.html">Shift 2021-Present</a></li>
-												<li><a href="#">Nuclio 2021-Present</a></li>
+												<li><a href="nuclio.htmlz">Nuclio 2021-Present</a></li>
 												<li><a href="#">FSB 2021</a></li>
 												<li><a href="#">Glovo 2019-2021</a></li>
 												<li><a href="#">Screwfix 2017-2019 </a></li>
