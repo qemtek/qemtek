@@ -33,59 +33,51 @@
 
 									<h2>Introduction</h2>
 
-									<p>In this project, the client was a logistics company who were struggling to grow in the highly competitive home-move market. Prices were generated through an equation taking into account distance, item volumes, required van size and more. The price was the same for every customer and region.</p><
+									<p>In this project, the client was a market leader that was struggling to grow in the highly competitive home-move market. Their prices were generated through an equation taking into account information about the move (distance, item volumes etc.) and the rates offered by drivers. The business had been operational for a number of years and had an abundance of good quality data. They were interested to know whether they could use that data to optimise their pricing strategy.</p>
 
-									<p>Dynamic pricing is a form of data driven pricing which often utilises machine learning techniques to influence pricing strategy. Machine learning models are able to learn complex patterns between key conversion indicators (customer behaviour, demographics, seasonality, and more) and their relationship to conversion (which in this case, is defined as a customer purchsing a product).</p>
-
-									<p>After learning these relationships we are able to estimate the probability of a customer purchasing a product at  different price points. In doing this, we can build a picture of what prices a customer (or group of customers) is likely to accept for a product, and the probability of acceptance.</p>
-
-									<p>If trained correctly, these models are extremely powerful and can be used to achieve whatever pricing objective a business hopes to achieve. We can identify the price point that returns the highest margin if the goal is income related. If we hope to improve market share, we can also choose to optimise for conversion, whilst maintaining a healthy bottom line. Data driven pricing can give businesses the power to set prices objectively, and has repeatedly returned successful results in the projects I have worked on.</p>
-
-
-									<p>This project involved introducing dynamic pricing to quotes for a moving company.</p>
+									<p>I was able to build a pricing model which was able to identify price sensitivity on a quote-by-quote basis, and use this to calculate the best price to show each customer, with some pretty astounding results!
 
 									<hr class="major" />
 
 									<h2>Theory</h2>
 
-									<p>Whilst the industry and types of product are different between this project and the price elasticity project (also included in the Work Projects section), this project can be seen of an extension of the theory used there. In that project, 'price elasticity' scores were generated for different products. Only 1 score was generated per product, which was a simplification. Whilst this is effective for small variations in price, in reality the price elasticity of a product will be different at different price points. Being able to estimate price elasticity at different price points requires much more data and a powerful machine learning model. Thankfully, in the home-move industry, prices can vary significantly based on the distance, number of items and driver rates, making it an ideal project for machine-learning-driven pricing.</p>
+									<p>Dynamic pricing is a pricing strategy that allows prices to vary, depending on the situation. In modern times, these variations often utilise machine learning models which (if trained properly, and given enough good quality data) can capture complex relationships between key conversion indicators (customer behaviour, demographics, seasonality, and more) and their relationship to conversion (which in this case, is defined as a customer purchasing a product).</p>
 
-									<p>Rather than looking at how changes in price affect order volumes (which was the case in the previous project), every 'product' in this project is unique to the customer. As such, a different approach is needed. For every enquiry, a quote with a price is generated and shown to the customer, and the customer either accepts or declines the quote. Whether the customer accepts/declines the quote is an ideal target for a machine learning model. If we use the price as one of the features in the model, we can supply different prices to the model, and measure the corresponding change in conversion probability. In doing this, we are able to simulate the price elasticity of each customer. </p>
+									<p>After learning these relationships, we can use such models to estimate the probability of a customer purchasing a product at different price points. In doing this, we can build a picture of what prices a customer (or group of customers) is likely to accept for a product, and the probability of acceptance.</p>
+
+									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
+
+									<p>This makes intuitive sense to me. When purchasing any product, each customer has a price range in their head that they are willing to accept. The goal of such models is to identify what that price range is and set prices near the top of that range.</p>
+
+									<p>This is an extremely powerful concept that allows a business to harness pricing to achieve whatever goals they may have. For example, If the goal is to maximise margin, we can identify the price point that returns the highest expected margin, which is the margin, multiplied by the probability of conversion. If we hope to grow market share, we can also choose to optimise for conversion, whilst minimising impact to the bottom line. </p>
 
 									<hr class="major" />
 
 									<h2>Objective</h2>
-									<p>The goal of the project was to utilize the clients data to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
+									<p>The goal of the project was to utilize the clients data to improve margin. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>margin per quote</b>, <b>conversion rate</b>. Ideally, we would like to maximise the margin per quote whilst maintaining a healthy conversion rate, which (in this industry) roughly equates to market share.</p>
 
 									<hr class="major" />
 
 									<h2>Challenges</h2>
-									<p>Building a data driven pricing strategy is technically difficult because the right strategy may be unique for a particular product, business and industry. Additionally, each company may have different levels of data, which require different modelling techniques to achieve the best results.</p>
+									<p>Building a dynamic and data-driven pricing strategy is technically difficult because the right strategy may be unique for a particular product, business and industry. Additionally, each company may have different levels of data, which require different modelling techniques to achieve the best results. It may seem like using cutting edge machine learning models is always the answer, but in reality, when not given enough data these models can learn very complex relationships that exist only in the noisy data (not in reality). This is known as overfitting.</p>
 									<p></p>
 
 									<hr class="major" />
 
-									<h2>Methodology</h2>
-									<p>Exploration of the data revealed detailed feature data over a number of years, allowing for a more complex model to be implemented. The main idea was to build a machine learning model to predict whether a customer will accept a quote, using the price (and other features) as inputs. We then insert a range of different prices into the model, and calculate the corresponding conversion probabilities. Since the goal is to maximise margin, we opted to choose the price that resulted in the highest expected margin, which is the margin we would make if the customer accepted the quote, multiplied by the probability of them accepting the quote.</p>
+									<h2>Deliverables</h2>
 
-									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
-
-									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
-									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
-
-									<hr class="major" />
-
-									<h2>Testing / Validation / Maintainance</h2>
-
-									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
-									<p>Throughout live testing, a control group was set up which did not receive price modifications. This was continually compared with the test group on the KPIs defined above.</p>
-									<p>A retraining pipeline was set up for the model, which would continually retrain the model on new data each month in order to capture emerging trends and changing economic conditions.</p>
+									<p>To integrate the project into the existing backend, an API was created, which took all features required by the model as inputs, calculated the conversion probability at different price points and worked out the expected margin from these two sets of values. The price point that gave the highest expected margin was then identified and returned to the backend. Each version of the API is containarised using docker, stored in a registry and is ran through AWS Lambda, which supports up to 1000 concurrent processes at any one time.</p>
+									<p>A dashboard was set up to continuously monitor the quality of the data going into the model, as well as the weekly performance of the model (to detect performance degradation).</p>
+									<p>A retraining pipeline was setup, which ran each month using the latest data. This allows the model to adapt to changing trends, such as an influx of customers with different behaviour or changing economic conditions. This pipeline was scheduled to run each month, but can also be triggered by changes to certain metrics, such as drops in model performance. Each trained model is versioned and stored in a database, which allows us to roll back to previous versions if any unexpected errors are identified.</p>
 
 									<hr class="major" />
 
 									<h2>Results</h2>
 
-									<p>The final iteration of the model achieved a 20% uplift in overall margin for an 8% decrease in conversion probability.</p>
+									<p>To test the model, 20% of website traffic was directed through the pricing API, and 80% went through a control group which received normal pricing. Testing both groups at the same time is essential as any seasonal or one-off events will affect both groups equally, resulting in more accurate results. These tests were ran for 2 months, until a statistically significant sample was drawn.</p>
+
+									<p>The test resulted in a 15% uplift in margin, for an 6% decrease in conversion probability.</p>
+
 								</section>
 
 						</div>
