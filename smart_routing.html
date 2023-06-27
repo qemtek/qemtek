@@ -72,6 +72,10 @@
 
 									<p>The final Smart Routing Engine was an enormous project built over the course of a year. Running approximately every 15 minutes, the system was able to pull in all deliveries and drivers, generate/update routes and communicate with the backend to send job requests to the relevant drivers. </p>
 
+									<p>The engine was build in python and containerised using Docker (separate builds for Production and Development). The docker containers were then hosted as a service on AWS Elastic Container Service to ensure 24/7 availability and logging. Automated deployment was set up via GitHub Actions, which would rebuild the docker image and update the service whenever changes were made to the production or development branch. This massively reduces technical overhead for Data Scientists working on the project.</p>
+
+									<p>In addition to the above, a KPI tracking dashboard was also generated to ensure that KPI's keep improving over time and to highlight any issues that may arise day-to-day.</p>
+
 									<hr class="major" />
 
 									<h2>Results</h2>
