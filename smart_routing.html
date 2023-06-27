@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Dynamic Pricing</title>
+		<title>Smart Routing</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -26,50 +26,59 @@
 							<!-- Content -->
 								<section>
 									<header class="main">
-										<h1>Dynamic Pricing</h1>
+										<h1>Smart Routing</h1>
 									</header>
 
 									<hr class="major" />
 
 									<h2>Introduction</h2>
 
-									<p>Dynamic pricing is a form of data driven pricing, and is about using machine learning techniques to influence pricing strategy. In using machine learning models to learn trends relating to customer behaviour, seasonal patterns and product specific behaviours, we are able to estimate the probability of a customer purchasing a product at a particular price point. If we repeat this for a range of price points, we can build a picture of what prices a customer (or group of customers) is willing to accept for a product. Once we have estimated a customer's price range, we can use this to set prices based on the objective we hope to achieve. If we want to improve margin, we can position ourselves near the top of the price range. If we are more interested in conversions and market share, we can position ourselves lower in the price range.</p>
-									<p>This project involved introducing dynamic pricing to quotes for a moving company.</p>
+									<p>The client in this project was a logistics company who were looking to modernise. The business was making around 1000 deliveries per week and was continuing to grow. As the business grew, the complexity of building routes for their delivery fleet became increasingly difficult. As the number of deliveries increases, the number of possible ways that the deliveries can be batched increases exponentially. This makes manual routing infeasible, because the cost of hiring enough staff to build the routes quickly outpaces the income generated from the deliveries.</p>
+
+									<p>With the help of Google's OR-Tools package I was able to build a route optimisation module (dubbed Smart Routing) to enable the business to scale without having to grow the operations team, saving £1000s per month in payroll costs. On top of this, route optimisation tools aim to generate the set of routes that minimises some 'cost', which in this case is the overall travel time. Because of this, the routes generated at scale were also more efficient than the routes generated manually (these systems can try 1000s of combinations of routes every second, which eclipses human abilities).</p>
+
+									<hr class="major" />
+
+									<h2>Theory</h2>
+
+									<p>Vehicle Routing is a time of optimization problem, and is actually one of the most difficult problems to solve. As stated earlier, the number of possible combinations of drivers and deliveries increases exponentially for a linear increase in nodes (drivers or deliveries). To put this into context, if we double the number of deliveries, we quadruple the complexity of the problem. If we increase the number of deliveries by a factor of 10, we increase the complexity by a factor of 100. Because of this, it is very difficult to find the 'perfect' solution to such problems. Thankfully, we are able to get a relatively good result in a fraction of the time using some heuristics (assumptions) and relatively simple but ingenious techniques. The field of research which covers such techniques is called Constraint Programming, and is used to solve a wide range of problems including any type of scheduling problem, resource allocation, bridge building, circuit board verification and vehicle routing.</p>
+
+									<p>Explained briefly, the idea of constraint programming is to set up a problem (in our case, we want to allocate deliveries to drivers), define a cost function (drive time in this case), and then add our constraints. A constraint is a rule which the optimiser must abide by in solving the problem. In this example, constraints include working hours of the drivers, collection and delivery windows and driver van capacity.</p>
+
+									<p>Once the problem is defined, the optimiser will create an initial solution by following a basic rule, such as 'assign each job to the nearest driver, if all constraints are met'. This creates an initial (albiet poor) solution. From there, the optimiser will attempt to improve the solution by zooming in on certain areas, and swapping certain nodes. For example, the optimiser might look at 2 drivers and swap a job on each of their routes. If the swap improves the solution, the change is kept, otherwise it is reversed. In reality the 'swap' can be much more complex, involving many jobs, but this hopefully demonstrates the idea. These operations are applied thousands of times per second, allowing the total drive time to slowly converge towards a (near) optimal solution</p>
+
+									<p>This process would be incredibly difficult to achieve for an individual, but thankfully the Operations Research team at Google have a package that allows us to create and solve such problems. The real difficulty involves taking an agnostic package such as this and building a routing module around it which can integrate with the clients existing backend infrastructure.</p>
 
 									<hr class="major" />
 
 									<h2>Objective</h2>
-									<p>The goal of the project was to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
+									<p>The overall objective of the project was to allow the business to scale without increasing the team. To measure success, the following KPIs were defined:</p>
+									<ul>
+										<li><b>Deliveries Per Hour</b> - With scale, we are able to make more efficient routes for the drivers. Improvements in deliveries per hour roughly equates to improvements in margin, so is a key metric to track.</li>
+										<li><b>Deliveries made on time</b> - It is important to track what % of deliveries are made on time to ensure that the routes generated by Smart Routing are feasible. We want to maximise deliveries per hour whilst also keeping this KPI high.</li>
+										<li><b>Manual Intervention Rate</b> - This KPI relates to the % of bookings which needed some form of manual intervention. A manual intervention rate of 0% is near impossible because there is always the chance that things go wrong (traffic jams, flat tires and damaged goods are always a possibility). Despite this, being able to minimise this KPI tells us how successful we have been at automating the routing process.</li>
+									</ul>
 
 									<hr class="major" />
 
 									<h2>Challenges</h2>
-									<p>Building a data driven pricing strategy is technically difficult because the right strategy may be unique for a particular product, business and industry. Additionally, each company may have different levels of data, which require different modelling techniques to achieve the best results.</p>
-									<p></p>
+									<p>The client has a huge codebase which includes a management dashboard for operations teams and an app for customer and drivers. To be successful the Smart Routing engine must be able to successfully communicate with each backend module. In addition to this, routes must be generated as fast as possible to ensure that they adapt to changing conditions, such as traffic.</p>
+
+									<p>Traffic was a major issue in this project because the client had not paid for an API that includes traffic. Unfortunately due to the number of deliveries and drivers, using a traffic API would cost thousands per day and the coompany was not in a position to do this. Fortunately, all drivers had GPS tracking data saved over a number of years. In a separate project we were able to use this data to estimate the 'real' drive time between locations by feeding the historic data and time into a machine learning model and predicting a 'traffic adjustment'.</p>
 
 									<hr class="major" />
 
-									<h2>Methodology</h2>
-									<p>Exploration of the data revealed detailed feature data over a number of years, allowing for a more complex model to be implemented. The main idea was to build a machine learning model to predict whether a customer will accept a quote, using the price (and other features) as inputs. We then insert a range of different prices into the model, and calculate the corresponding conversion probabilities. Since the goal is to maximise margin, we opted to choose the price that resulted in the highest expected margin, which is the margin we would make if the customer accepted the quote, multiplied by the probability of them accepting the quote.</p>
+									<h2>Deliverables</h2>
 
-									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
-
-									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
-									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
-
-									<hr class="major" />
-
-									<h2>Testing / Validation / Maintainance</h2>
-
-									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
-									<p>Throughout live testing, a control group was set up which did not receive price modifications. This was continually compared with the test group on the KPIs defined above.</p>
-									<p>A retraining pipeline was set up for the model, which would continually retrain the model on new data each month in order to capture emerging trends and changing economic conditions.</p>
+									<p>The final Smart Routing Engine was an enormous project built over the course of a year. Running approximately every 15 minutes, the system was able to pull in all deliveries and drivers, generate/update routes and communicate with the backend to send job requests to the relevant drivers. </p>
 
 									<hr class="major" />
 
 									<h2>Results</h2>
 
-									<p>The final iteration of the model achieved a 20% uplift in overall margin for an 8% decrease in conversion probability.</p>
+									<p>Since the launch of the Smart Routing Engine, the business orders have increased (at the time of writing) to ~1500 bookings per week, with no increase in team size. Manual intervention rates have been reduced from 100% to ~30%, giving the operations team more time to work on the issues that only humans can solve.
+									</p>
+
 								</section>
 
 						</div>
@@ -97,8 +106,8 @@
 										<li>
 											<span class="opener">Experience</span>
 											<ul>
-												<li><a href="#">Shift 2021-Present</a></li>
-												<li><a href="#">Nuclio 2021-Present</a></li>
+												<li><a href="shift.html">Shift 2021-Present</a></li>
+												<li><a href="nuclio.htmlz">Nuclio 2021-Present</a></li>
 												<li><a href="#">FSB 2021</a></li>
 												<li><a href="#">Glovo 2019-2021</a></li>
 												<li><a href="#">Screwfix 2017-2019 </a></li>
@@ -111,7 +120,7 @@
 												<li><a href="smart_routing.html">Smart Routing</a></li>
 												<li><a href="customer_churn.html">Customer Churn</a></li>
 												<li><a href="machine_learning_platform.html">Machine Learning Platform (Infra)</a></li>
-												<li><a href="price_elasticity.html">Price Elasticity</a></li>
+												<li><a href="price_elasticity.html">Price Elasticity Modelling</a></li>
 											</ul>
 										</li>
 										<li>
