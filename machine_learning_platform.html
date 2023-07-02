@@ -33,43 +33,29 @@
 
 									<h2>Introduction</h2>
 
-									<p>Dynamic pricing is a form of data driven pricing, and is about using machine learning techniques to influence pricing strategy. In using machine learning models to learn trends relating to customer behaviour, seasonal patterns and product specific behaviours, we are able to estimate the probability of a customer purchasing a product at a particular price point. If we repeat this for a range of price points, we can build a picture of what prices a customer (or group of customers) is willing to accept for a product. Once we have estimated a customer's price range, we can use this to set prices based on the objective we hope to achieve. If we want to improve margin, we can position ourselves near the top of the price range. If we are more interested in conversions and market share, we can position ourselves lower in the price range.</p>
-									<p>This project involved introducing dynamic pricing to quotes for a moving company.</p>
+									<p>When people think of Data Science, most of the thought goes to building machine learning models. Though this constitutes a large part of the work, this is often less than half of what is required to deliver a project. Going from a trained model to something running consistently in a production environment, with the relevant monitoring and error handling, can take much longer than building the model itself. This is why the last few years have seen roles such as Machine Learning Engineer and ML Ops Engineer come to prominence.</p>
+									<p>Unfortunately, many businesses (especially startups) do not have the funding to build a large team of professionals, and it often falls to the data scientist to put their own models into production. After doing this a number of times myself, I developed a project which covers most of the productionisation steps and significantly reduces the time to production for data science projects.</p>
 
 									<hr class="major" />
 
 									<h2>Objective</h2>
-									<p>The goal of the project was to increase margin. Using the logic above, this translates into positioning ourselves at the higher end of the price range that each customer is willing to accept. To measure the performance of the model, we defined a set of KPIs and created a dashboard to track them. The KPIs used were the <b>total quotes</b>, <b>total bookings</b>, <b>conversion rate</b>, <b>income</b> (total money received from the customer), <b>margin</b> and <b>margin per quote</b>. The main KPI we wanted to improve was the margin per quote, with minimal loss in conversion rate.</p>
-
-									<hr class="major" />
-
-									<h2>Challenges</h2>
-									<p>Building a data driven pricing strategy is technically difficult because the right strategy may be unique for a particular product, business and industry. Additionally, each company may have different levels of data, which require different modelling techniques to achieve the best results.</p>
-									<p></p>
+									<p>The goal of the project was to streamline the model productionisation process, enabling data scientists to deploy models without assistance of specialists. This not only cuts down the time to production for experienced data scientists, but also allows less experienced data scientists to deploy models, which frees up the time of the more experienced ones. In addition to this, all deployed infrastructure will be in a uniform format, where the knowledge form understanding the deployment of one project will be transferable to all projects.</p>
 
 									<hr class="major" />
 
 									<h2>Methodology</h2>
-									<p>Exploration of the data revealed detailed feature data over a number of years, allowing for a more complex model to be implemented. The main idea was to build a machine learning model to predict whether a customer will accept a quote, using the price (and other features) as inputs. We then insert a range of different prices into the model, and calculate the corresponding conversion probabilities. Since the goal is to maximise margin, we opted to choose the price that resulted in the highest expected margin, which is the margin we would make if the customer accepted the quote, multiplied by the probability of them accepting the quote.</p>
+									<p>The first step in building such a platform is to map out everything that is needed in the deployment of a project, split these requirements into components, and build these components in a way that makes them reusable for other projects. If we turn these steps into a diagram, you get something like the one below:</p>
 
-									<span class="image main"><img src="pricing/images/expected_income.png" alt="" /></span>
+									<span class="image main"><img src="pricing/images/mlp.jpeg" alt="" /></span>
 
-									<p>After testing a subset of candidate models, XGBoost proved to be the best performing. The model is trained using log loss as the loss function, and Matthews Correlation Coefficient (MCC) as the performance metric, but what we are really interested in is whether the probabilities output by the model are representative of reality.</p>
-									<p> We can do this by making predictions on a set of test data (data that the model has never seen), putting those predictions into bins based on the conversion probability (the output of the model), and calculating the true conversion rate in each bin. If the mean predicted conversion probability in each bin is close to the actual conversion probability, then this indicates that the probabilities output by the model match up to reality. If this is not the case, we can train an additional model on top of XGBoost to correct the discrepancy. This is known as probability calibration. In this case, the model probabilities were already sufficiently close to reality.</p>
+									<p>When using cloud platforms such as AWS there are often many different ways to create these steps. For the traditional machine learning parts (gathering data, generating features, training a model etc) we can look to AWS Sagemaker, which is AWS's flagship machine learning product. For each step, we create a script which takes inputs from S3, processes them and sends the outputs back to S3. These 'stages' are then hosted on ephemeral instances within the AWS infrastructure. Since each stage is structured the same, and can be generated from a terminal using the AWS CLI, it is possible to create boilerplate code which will generate the infrastructure for a user, the only thing they need to supply is the scripts and the S3 bucket locations.</p>
 
-									<hr class="major" />
+									<p>When it comes to the hosting and deploying of trained models, the process is even simpler. Whenever possible, I like to generate infrastructure using scripts (Using Infrastructure as Code tools such as AWS Cloudformation). In doing this, we can save the project code, and any code for generating the infrastructure, inside the same project. This makes everything easy to find, and makes it very easy to make changes to the infrastructure (adding a new IP to a whitelist requires pushing a change on a GitHub project rather than opening a ticket with your account administrator). To simplify this process even further, tools such as AWS SAM can generate boilerplate code for commonly used infrastructure with a single command. If we wanted to host a model via an API, AWS SAM has a template that will generate a docker image from the project, store that image in AWS ECR (AWS's container registry), generate a lambda function which will handle requests to and from the docker image, and set up an API on AWS API Gateway, which communicates with the lambda function.</p>
 
-									<h2>Testing / Validation / Maintainance</h2>
+									<p>Experiment tracking is another important feature of good data science projects. Every change made to a model or system should be logged, and performance metrics should also be tracked over time in order to measure changes to the system in response to those changes. Tools such as MLFlow can be hosted on Amazon's EC2, and can save experiment and metrics for every Data Science project.</p>
 
-									<p>Testing the model live involved creating an API, which takes data from the website backend and calls on the model to make predictions. After making predictions for each price point, and multiplying the prices by the corresponding conversion probabilities, the price with the highest expected income was identified and sent back to the backend.</p>
-									<p>Throughout live testing, a control group was set up which did not receive price modifications. This was continually compared with the test group on the KPIs defined above.</p>
-									<p>A retraining pipeline was set up for the model, which would continually retrain the model on new data each month in order to capture emerging trends and changing economic conditions.</p>
+									<p>Following the steps above allow us to build a robust Data Science productionisation platform without the help of dedicated specialists and is an essential step in minimising error in Data Science, which can often have huge consequences due to the nature of the projects. Setting up such platforms is often the first thing I do when starting a team.</p>
 
-									<hr class="major" />
-
-									<h2>Results</h2>
-
-									<p>The final iteration of the model achieved a 20% uplift in overall margin for an 8% decrease in conversion probability.</p>
 								</section>
 
 						</div>
