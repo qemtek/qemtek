@@ -46,7 +46,7 @@
 									<h2>Methodology</h2>
 									<p>The first step in building such a platform is to map out everything that is needed in the deployment of a project, split these requirements into components, and build these components in a way that makes them reusable for other projects. If we turn these steps into a diagram, you get something like the one below:</p>
 
-									<span class="image main"><img src="pricing/images/mlp.jpeg" alt="" /></span>
+									<span class="image main"><img src="images/mlp.jpeg" alt="" /></span>
 
 									<p>When using cloud platforms such as AWS there are often many different ways to create these steps. For the traditional machine learning parts (gathering data, generating features, training a model etc) we can look to AWS Sagemaker, which is AWS's flagship machine learning product. For each step, we create a script which takes inputs from S3, processes them and sends the outputs back to S3. These 'stages' are then hosted on ephemeral instances within the AWS infrastructure. Since each stage is structured the same, and can be generated from a terminal using the AWS CLI, it is possible to create boilerplate code which will generate the infrastructure for a user, the only thing they need to supply is the scripts and the S3 bucket locations.</p>
 
